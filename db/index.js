@@ -5,6 +5,7 @@ const config = require('./config.json');
 mongoose.Promise = global.Promise; // es6 promise
 
 const connectionURL = `mongodb://${config.db.user}@${config.db.host}:${config.db.port}/${config.db.name}`;
+mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
 mongoose.connect(connectionURL, { useNewUrlParser: true })

@@ -1,20 +1,48 @@
 const mongoose = require('mongoose');
+const bCrypt = require('bcryptjs');
 
-const schema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
   username: {
     type: String,
-    required: true,
-    unique: true
+    required: [true, 'Имя пользователя обязательно'],
+    unique: true,
   },
-  email: {
+  hash: {
     type: String,
-    required: true,
-    unique: true
+    required: [true, 'Пароль обязателен'],
   },
-  password: {
+  firstName: {
     type: String,
-    required: true
-  }
+    set: i => (i === '' ? 'Anonim' + new Date() : i),
+  },
+  middleName: {
+    type: String,
+    set: i => (i === '' ? 'Anonim' + new Date() : i),
+  },
+  surName: {
+    type: String,
+    set: i => (i === '' ? 'Anonim' + new Date() : i),
+  },
+  permission: {
+    type: Object,
+  },
+  token: {
+    type: String,
+  },
 });
 
-module.exports = mongoose.model("User", schema);
+userSchema.methods.setPassword = function(password) {
+  this.hash = bCrypt.hashSync(password, bCrypt.genSaltSync(10), null);
+};
+
+userSchema.methods.validPassword = function(password) {
+  return bCrypt.compareSync(password, this.hash);
+};
+
+userSchema.methods.setToken = function(token) {
+  this.token = token;
+};
+
+mongoose.model('User', userSchema);
