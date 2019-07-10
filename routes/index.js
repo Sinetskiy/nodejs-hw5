@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controllers = require('../controllers');
+const passport = require('passport');
 
 const isAuthenticated = function(req, res, next) {
   if (req.isAuthenticated()) {
@@ -12,15 +13,10 @@ const isAuthenticated = function(req, res, next) {
 
 router.all('*', controllers.token);
 
-router.get('/', controllers.index);
-
 router.post('/api/login', controllers.login);
-
-router.get('/profile', isAuthenticated, controllers.profile);
 
 router.post('/api/saveNewUser', controllers.registration);
 
 router.get('/logout', controllers.logout);
-
 
 module.exports = router;

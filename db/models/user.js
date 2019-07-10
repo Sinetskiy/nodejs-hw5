@@ -15,20 +15,17 @@ const userSchema = new Schema({
   },
   firstName: {
     type: String,
-    set: i => (i === '' ? 'Anonim' + new Date() : i),
   },
   middleName: {
     type: String,
-    set: i => (i === '' ? 'Anonim' + new Date() : i),
   },
   surName: {
     type: String,
-    set: i => (i === '' ? 'Anonim' + new Date() : i),
   },
   permission: {
     type: Object,
   },
-  token: {
+  access_token: {
     type: String,
   },
 });
@@ -42,7 +39,7 @@ userSchema.methods.validPassword = function(password) {
 };
 
 userSchema.methods.setToken = function(token) {
-  this.token = token;
+  this.access_token = token;
 };
 
 mongoose.model('User', userSchema);

@@ -63,16 +63,3 @@ passport.use(
     )
 );
 
-passport.use(
-    new Strategy(params, function (payload, done) {
-        console.log(payload);
-        User.find({id: payload.id})
-            .then(user => {
-                if (!user) {
-                    return done(new Error('User not found'));
-                }
-                return done(null, {id: user.id});
-            })
-            .catch(err => done(err));
-    })
-);
