@@ -1,9 +1,22 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const controllers = require('../controllers');
+const passport = require('passport');
 
-/* GET home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
+const isAuthenticated = function(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+  req.flash('message', 'Зарегистрируйтесь или войдите в профиль');
+  res.redirect('/');
+};
+
+router.all('*', controllers.token);
+
+router.post('/api/login', controllers.login);
+
+router.post('/api/saveNewUser', controllers.registration);
+
+router.get('/logout', controllers.logout);
 
 module.exports = router;
