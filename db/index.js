@@ -4,7 +4,7 @@ const config = require('./config.json');
 // Use native promises
 mongoose.Promise = global.Promise; // es6 promise
 
-const connectionURL = `mongodb://${config.db.user}@${config.db.host}:${config.db.port}/${config.db.name}`;
+const connectionURL = `mongodb+srv://loft:loft@cluster0-wtdo7.mongodb.net/test?retryWrites=true&w=majority`;
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 
