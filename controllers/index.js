@@ -4,7 +4,8 @@ const User = mongoose.model('User');
 const uuidv4 = require('uuid/v4');
 
 const getUserObject = (user) => {
-    return {username, firstName, middleName, surName, permission, access_token} = user;
+    const {_id, username, firstName, middleName, surName, permission, access_token} = user;
+    return {id:_id, username, firstName, middleName, surName, permission, access_token};
 };
 
 module.exports.token = (req, res, next) => {
@@ -45,7 +46,6 @@ module.exports.login = (req, res, next) => {
                         path: '/',
                         httpOnly: true,
                     });
-                    console.log('token', token);
                     res.json(getUserObject(user));
                 });
             } else {

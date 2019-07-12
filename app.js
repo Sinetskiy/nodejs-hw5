@@ -11,6 +11,8 @@ let logger = require('morgan');
 
 let app = express();
 const bodyParser = require('body-parser');
+const swaggerUi = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
 
 require('./db');
 
@@ -27,6 +29,15 @@ app.use(cookieParser());
 
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json({type: 'text/plain'}));
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.header(
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept'
+    );
+    next();
+});
 
 app.use(
     session({
@@ -49,7 +60,8 @@ app.use(flash());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', require('./routes/index'));
-
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api', require(path.join(__dirname, 'routes', 'api')));
 
 
 // catch 404 and forward to error handler

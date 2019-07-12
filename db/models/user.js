@@ -1,9 +1,7 @@
 const mongoose = require('mongoose');
 const bCrypt = require('bcryptjs');
 
-const Schema = mongoose.Schema;
-
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
   username: {
     type: String,
     required: [true, 'Имя пользователя обязательно'],
@@ -20,6 +18,9 @@ const userSchema = new Schema({
     type: String,
   },
   surName: {
+    type: String,
+  },
+  image: {
     type: String,
   },
   permission: {
@@ -42,4 +43,4 @@ userSchema.methods.setToken = function(token) {
   this.access_token = token;
 };
 
-mongoose.model('User', userSchema);
+module.exports = mongoose.model('User', userSchema);

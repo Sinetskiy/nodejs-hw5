@@ -14,12 +14,13 @@ const params = {
 };
 
 passport.serializeUser(function (user, done) {
-    console.log('Serialize: ', user);
+    user.id = user._id;
+   // console.log('Serialize: ', user);
     done(null, user);
 });
 
 passport.deserializeUser(function (id, done) {
-    console.log('Deserialize: ', id);
+  //  console.log('Deserialize: ', id);
     if (!mongoose.Types.ObjectId.isValid(id)) {
         done(null, id);
     } else {
@@ -27,7 +28,7 @@ passport.deserializeUser(function (id, done) {
             if (err) {
                 return done(err);
             }
-            console.log(user);
+        //    console.log(user);
             done(null, user);
         });
     }
@@ -40,7 +41,6 @@ passport.use(
             passReqToCallback: true,
         },
         function (req, username, password, done) {
-            console.log(username);
             User.findOne({username})
                 .then(user => {
                     if (!user) {
