@@ -9,4 +9,4 @@ deploy:
   strategy: git
 
 app:
-  user-api: nodejs-hw5
+  master: nodejs-hw5
