@@ -65,7 +65,7 @@ module.exports.login = (req, res, next) => {
             if (req.body.remembered) {
                 user.access_token = uuidv4();
                 user.save().then(user => {
-                    res.cookie('access_token', token, {
+                    res.cookie('access_token', user.access_token, {
                         maxAge: 7 * 60 * 60 * 1000,
                         path: '/',
                         httpOnly: true,
