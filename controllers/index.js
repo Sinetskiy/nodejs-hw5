@@ -103,6 +103,11 @@ module.exports.registration = (req, res, next) => {
             newUser
                 .save()
                 .then(user => {
+                    res.cookie('username', user.username, {
+                        maxAge: 7 * 60 * 60 * 1000,
+                        path: '/',
+                        httpOnly: true,
+                    });
                     req.logIn(user, err => {
                         if (err) next(err);
                         req.flash('message', 'User create');
