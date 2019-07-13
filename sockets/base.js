@@ -1,47 +1,26 @@
 module.exports = function (io) {
 
-    const clients = {0: {id:0,username: "andrey"}};
-    let count = 0;
+    const clients = {};
 
     io.on('connection', socket => {
-        const id = count++;
-        clients[id] = socket.id;
-        console.log(clients);
+        clients[socket.id] = {id: socket.id, username: socket.id};
 
-        socket.send({
-            type: 'hello',
-            message: `Hello you id is ${id}`,
-            data: id
+        socket.json.emit('all users', clients);
+        socket.broadcast.json.emit('new user', {id: socket.id, username: 'user' + socket.id});
+
+        socket.join(socket.id);
+
+        socket.on('chat message', (message, user) => {
+            console.log('m', message, 'u', user);
+            socket.join(user);
+            socket.broadcast.to(user).emit('chat message', message, user);
         });
 
-        socket.broadcast.send({
-            type: 'info',
-            message: clients
-        });
-
-        socket.on('all users', message => {
-            socket.broadcast.send({
-                type: 'message',
-                message: clients,
-                author: id
-            });
-        })
-
-        socket.on('message', message => {
-            socket.send({
-                type: 'message',
-                message: message,
-                author: id
-            });
-            socket.broadcast.send({
-                type: 'message',
-                message: message,
-                author: id
-            });
-        });
 
         socket.on('disconnect', () => {
-            delete clients[id];
+            console.log(clients);
+            socket.broadcast.emit('delete user', socket.id);
+            delete clients[socket.id];
         });
     });
 

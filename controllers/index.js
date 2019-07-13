@@ -1,4 +1,6 @@
+const jwt = require('jsonwebtoken');
 const passport = require('passport');
+const secret = require('../config/config.json').secret;
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
 const uuidv4 = require('uuid/v4');
@@ -16,6 +18,8 @@ module.exports.token = (req, res, next) => {
             if (user) {
                 req.logIn(user, err => {
                     if (err) next(err);
+                    console.log('user', user);
+                    res.json(getUserObject(user));
                 });
             }
             next();
@@ -23,6 +27,27 @@ module.exports.token = (req, res, next) => {
     } else {
         next();
     }
+};
+
+module.exports.jwtToken = (req, res, next) => {
+    passport.authenticate('local', { session: false }, (err, user, info) => {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            return res.json({
+                err: true,
+                message: 'Укажите правильный логин и пароль',
+            });
+        }
+        if (user) {
+            const payload = {
+                id: user.id,
+            };
+            const token = jwt.sign(payload, secret);
+            res.json({ err: false, token: token });
+        }
+    })(req, res, next);
 };
 
 module.exports.login = (req, res, next) => {

@@ -66,7 +66,8 @@ app.use('/api', require(path.join(__dirname, 'routes', 'api')));
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+    res.redirect('/');
+    //next(createError(404));
 });
 
 // error handler
