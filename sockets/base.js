@@ -1,14 +1,19 @@
+const cookie = require('cookie');
+
 module.exports = function (io) {
 
     const clients = {};
 
     io.on('connection', socket => {
-        clients[socket.id] = {id: socket.id, username: socket.id};
+
+        const cookies = cookie.parse(socket.handshake.headers.cookie);
+
+        clients[socket.id] = {id: socket.id, username: cookies.username};
 
         socket.json.emit('all users', clients);
-        socket.broadcast.json.emit('new user', {id: socket.id, username: 'user' + socket.id});
+        socket.broadcast.json.emit('new user', {id: socket.id, username: cookies.username});
 
-        socket.join(socket.id);
+        socket.join(cookies.username);
 
         socket.on('chat message', (message, user) => {
             console.log('m', message, 'u', user);
