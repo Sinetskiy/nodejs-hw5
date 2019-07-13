@@ -39,8 +39,4 @@ userSchema.methods.validPassword = function(password) {
   return bCrypt.compareSync(password, this.hash);
 };
 
-userSchema.methods.setToken = function(token) {
-  this.access_token = token;
-};
-
 module.exports = mongoose.model('User', userSchema);

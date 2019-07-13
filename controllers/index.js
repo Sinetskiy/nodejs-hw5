@@ -11,7 +11,7 @@ const getUserObject = (user) => {
 };
 
 module.exports.token = (req, res, next) => {
-    const access_token = req.cookies.token;
+    const access_token = req.cookies.access_token;
     console.log('access_token', access_token);
     if (!!access_token) {
         User.findOne({access_token}).then(user => {
@@ -63,10 +63,9 @@ module.exports.login = (req, res, next) => {
                 return next(err);
             }
             if (req.body.remembered) {
-                const token = uuidv4();
-                user.setToken(token);
+                user.access_token = uuidv4();
                 user.save().then(user => {
-                    res.cookie('token', token, {
+                    res.cookie('access_token', token, {
                         maxAge: 7 * 60 * 60 * 1000,
                         path: '/',
                         httpOnly: true,
@@ -95,8 +94,7 @@ module.exports.registration = (req, res, next) => {
             newUser.middleName = middleName;
             newUser.surName = surName;
             newUser.permission = permission;
-            const token = uuidv4();
-            newUser.setToken(token);
+            newUser.access_token = uuidv4();
             newUser
                 .save()
                 .then(user => {
