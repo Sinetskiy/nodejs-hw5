@@ -57,7 +57,8 @@ router.get('/getUsers', async (req, res) => {
 
 router.put('/updateUserPermission/:id', async (req, res) => {
     try {
-        res.json(true);
+        const result = await usersCtrl.update({...req.params, ...req.body});
+        res.json(result);
     } catch (err) {
         errorHandler(err, res);
     }

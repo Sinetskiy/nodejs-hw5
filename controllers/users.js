@@ -53,16 +53,12 @@ exports.get = ({id}) => new Promise(async (resolve, reject) => {
     }
 });
 
-exports.update = ({id, firstName, middleName, surName, oldPassword, password, image}) => new Promise(async (resolve, reject) => {
+exports.update = ({id, firstName, middleName, surName, oldPassword, permission, password, image}) => new Promise(async (resolve, reject) => {
     try {
+
         if (!id) {
             return reject('id is required');
         }
-
-        // const { error, value } = Joi.validate({ username, email }, schema);
-        // if (error) {
-        //   return reject(error);
-        // }
 
         const user = await User.findById(id);
         if (firstName)
@@ -75,6 +71,9 @@ exports.update = ({id, firstName, middleName, surName, oldPassword, password, im
             user.set({image});
         if (password)
             user.setPassword(password);
+        if (permission)
+            user.setPassword(permission);
+
         const result = await user.save();
 
         resolve(resultItemConverter(result));
